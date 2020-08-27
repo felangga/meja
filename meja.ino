@@ -8,8 +8,6 @@
 
 #define CLK 5
 #define DIO 4
-#define pin_pot A0
-
 #define dirPin 7
 #define stepPin 6
 #define motorInterfaceType 1
@@ -50,9 +48,9 @@ void setup() {
   berapaKali = EEPROM.read(3);
   maxLevel = EEPROM.read(4);
 
-  saveA = EEPROM.read(1) * (360 * berapaKali);
-  saveB = EEPROM.read(2) * (360 * berapaKali);
-  posisi = EEPROM.read(5) * (360 * berapaKali);
+  saveA = EEPROM.read(1) * (200 * berapaKali);
+  saveB = EEPROM.read(2) * (200 * berapaKali);
+  posisi = EEPROM.read(5) * (200 * berapaKali);
   stepper.setCurrentPosition(posisi);
 
 
@@ -116,12 +114,12 @@ void loop() {
     Serial.println(hitung);
     if (hitung > LONG_PRESS_TIME) {
       saveA = posisi;
-      EEPROM.write(1, posisi / (360 * berapaKali));
+      EEPROM.write(1, posisi / (200 * berapaKali));
       Serial.println("[LOG] Posisi A tersimpan");
       display.print("SAVE TO A");
     } else {
       posisi = saveA;
-      EEPROM.write(5, posisi / (360 * berapaKali));
+      EEPROM.write(5, posisi / (200 * berapaKali));
       stepper.moveTo(posisi);
       stepper.setSpeed(1000);
       Serial.println("[LOG] Meload posisi A");
@@ -139,13 +137,13 @@ void loop() {
 
     if (hitung > LONG_PRESS_TIME) {
       saveB = posisi;
-      EEPROM.write(2, posisi / (360 * berapaKali));
+      EEPROM.write(2, posisi / (200 * berapaKali));
       Serial.println("[LOG] Posisi B tersimpan");
       display.print("SAVE TO B");
 
     } else {
       posisi = saveB;
-      EEPROM.write(5, posisi / (360 * berapaKali));
+      EEPROM.write(5, posisi / (200 * berapaKali));
       stepper.moveTo(posisi);
       stepper.setSpeed(1000);
       Serial.println("[LOG] Meload posisi B");
@@ -155,9 +153,9 @@ void loop() {
   }
 
   // UP
-  if (analogRead(A7) == 1023 && lepas7 && posisi / (360 * berapaKali) < maxLevel) {
-    posisi += (360 * berapaKali);
-    EEPROM.write(5, posisi / (360 * berapaKali));
+  if (analogRead(A7) == 1023 && lepas7 && posisi / (200 * berapaKali) < maxLevel) {
+    posisi += (200 * berapaKali);
+    EEPROM.write(5, posisi / (200 * berapaKali));
     stepper.moveTo(posisi);
     stepper.setSpeed(1000);
 
@@ -166,8 +164,8 @@ void loop() {
 
   // DOWN
   if (analogRead(A6) == 1023 && lepas6 && posisi >= 1) {
-    posisi -= (360 * berapaKali);
-    EEPROM.write(5, posisi / (360 * berapaKali));
+    posisi -= (200 * berapaKali);
+    EEPROM.write(5, posisi / (200 * berapaKali));
     stepper.moveTo(posisi);
     stepper.setSpeed(1000);
 
@@ -175,7 +173,7 @@ void loop() {
   }
 
 
-  sprintf(data, "%4d", posisi / (360 * berapaKali));
+  sprintf(data, "%4d", posisi / (200 * berapaKali));
   display.print(data);
   lastStateA = currentStateA;
   lastStateB = currentStateB;
